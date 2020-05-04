@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <arg name="robot_name" default="custom"/>
+
+    <include file="$(find interbotix_gazebo)/launch/gazebo.launch">
+        <arg name="robot_name" value="$(arg robot_name)"/>
+        <!-- <arg name="robot_model" value="custom"/> -->
+        <!-- <arg name="use_default_rviz" value="true"/> -->
+    </include>
+
+    <include file="$(find kinect_robo)/launch/rviz_launch.launch">
+        <arg name="robot_name" value="$(arg robot_name)"/>
+    </include>
+    <!-- <include file="$(find rrbot_gazebo)/launch/rrbot_world.launch"/> -->
+
+    <include file="$(find kinect_robo)/launch/spawn_camera.launch">
+        <arg name="x" value="1"/>
+        <arg name="yaw" value="3.14159"/>
+    </include>
+
+    <node name="arm_controller_custom" pkg="kinect_robo" type="move_arm.py">
+        <remap from="/arm_controller/command" to="$(arg robot_name)/arm_controller/command"/>
+    </node>
+</launch>
