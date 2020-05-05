@@ -1,6 +1,6 @@
 # DumE-test
 ## Setting up Kinect model
-* Add the <code>kinect</code> directory to <code>\~/.gazebo/models</code> (create <code>models</code> sub-directory if it doesn't exist.  
+* Add the <code>kinect</code> directory to <code>\~/.gazebo/models</code> (create <code>models</code> sub-directory if it doesn't exist).  
 * Also type the following command into your terminal window  
 <code>echo 'export GAZEBO_MODEL_PATH=\~/.gazebo/models:$GAZEBO_MODEL_PATH' >> \~/.bashrc</code> (for bash users)  
 <code>echo 'export GAZEBO_MODEL_PATH=\~/.gazebo/models:$GAZEBO_MODEL_PATH' >> \~/.zshrc</code> (for zsh users)  
