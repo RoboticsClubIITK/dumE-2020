@@ -6,6 +6,7 @@ add_definitions(-std=c++11)
 
 # Load catkin and all dependencies required for this package
 find_package(catkin REQUIRED COMPONENTS
+  roscpp
   rospy
   gazebo_ros
 )
@@ -18,6 +19,7 @@ include_directories(${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS} ${GAZEBO_INCLUDE
 
 catkin_package(
   DEPENDS
+    roscpp
     rospy
     gazebo_ros
 )

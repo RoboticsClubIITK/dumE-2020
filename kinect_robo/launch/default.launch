@@ -6,19 +6,25 @@
         <arg name="robot_name" value="$(arg robot_name)"/>
         <!-- <arg name="robot_model" value="custom"/> -->
         <!-- <arg name="use_default_rviz" value="true"/> -->
+        <!-- <arg name="paused" value="true"/> -->
     </include>
 
-    <include file="$(find kinect_robo)/launch/rviz_launch.launch">
+    <!-- <include file="$(find kinect_robo)/launch/rviz_launch.launch">
         <arg name="robot_name" value="$(arg robot_name)"/>
-    </include>
+    </include> -->
     <!-- <include file="$(find rrbot_gazebo)/launch/rrbot_world.launch"/> -->
 
     <include file="$(find kinect_robo)/launch/spawn_camera.launch">
-        <arg name="x" value="1"/>
+        <arg name="x" value="1.25"/>
+        <arg name="z" value="0.1"/>
+        <arg name="pitch" value="-0.2"/>
         <arg name="yaw" value="3.14159"/>
     </include>
 
-    <node name="arm_controller_custom" pkg="kinect_robo" type="move_arm.py">
+    <!-- <node name="arm_controller_custom" pkg="kinect_robo" type="move_arm.py">
         <remap from="/arm_controller/command" to="$(arg robot_name)/arm_controller/command"/>
-    </node>
+    </node> -->
+
+    <!-- <node name="joint_tracker" pkg="kinect_robo" type="joint_tracker.py"/> -->
+
 </launch>
