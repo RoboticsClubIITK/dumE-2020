@@ -77,8 +77,8 @@ class arm_track:
             # mask = cv2.erode(mask, None, iterations=2)
             # mask = cv2.dilate(mask, None, iterations=2)
             
-            # # Show Mask image of each colour
-            # cv2.imshow("Mask_"+val.name, mask) 
+            # Show Mask image of each colour
+            cv2.imshow("Mask_"+val.name, mask) 
             
             # Get Contours(boundary) for the mask
             cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
@@ -118,7 +118,7 @@ class arm_track:
         (rows, cols, _) = image_cv.shape
         if rows > 0 and cols > 0:
             self.image_cv = image_cv
-            # cv2.imshow('Raw_Image',image_cv)
+            cv2.imshow('Raw_Image',image_cv)
             cv2.waitKey(3)
         
         self.get_centers()
