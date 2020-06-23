@@ -4,12 +4,12 @@ import rospy
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 def move_arm():
-    rospy.init_node('arm_controller_custom', anonymous=False)
+    rospy.init_node('arm_controller_vx250', anonymous=False)
     
-    topic_name = 'custom/arm_controller/command'
+    topic_name = 'vx250/arm_controller/command'
     pub = rospy.Publisher(topic_name, JointTrajectory, queue_size=1)
 
-    rate = rospy.Rate(60)
+    rate = rospy.Rate(30)
     
     while not rospy.is_shutdown():
         trajectory=JointTrajectory()
@@ -34,7 +34,7 @@ def move_arm():
         point.positions.append(c)
         point.positions.append(d)
         point.positions.append(0.0)
-        point.time_from_start = rospy.Duration(0, 1e8)
+        point.time_from_start.secs = 1
 
         trajectory.points.append(point)
 

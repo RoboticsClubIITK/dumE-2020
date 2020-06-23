@@ -112,12 +112,11 @@ class arm_track:
                 # centroid
                 c = max(filtered, key=cv2.contourArea)
                 ((x_c, y_c), radius) = cv2.minEnclosingCircle(c)
-                # only proceed if the radius meets a minimum size
-                if radius > 10:
-                    # draw the circle and centroid on the frame,
-                    # then update the list of tracked points
-                    cv2.circle(self.color_cv, (int(x_c), int(y_c)), int(radius), (0, 255, 255), 2)
-                    cv2.circle(self.color_cv, (int(x_c), int(y_c)), 2, (255, 255, 255), -1)
+
+                # draw the circle and centroid on the frame,
+                # then update the list of tracked points
+                cv2.circle(self.color_cv, (int(x_c), int(y_c)), int(radius), (0, 255, 255), 2)
+                cv2.circle(self.color_cv, (int(x_c), int(y_c)), 2, (255, 255, 255), -1)
             
             X, Y, Z, total_area = 0, 0, 0, 0
             (rows, cols, _) = self.color_cv.shape
@@ -144,10 +143,11 @@ class arm_track:
             center_str = '(%0.3f, %0.3f, %0.3f)' %(X,Y,Z)
             cv2.putText(self.color_cv, center_str, (int(x_c), int(y_c)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
             
-            # Add center found to joints container
-            center = [X,Y,Z]            
-            joint = joints(val.name, center)
-            self.joints.append(joint)
+            # Add center found to joints container only if countour is detected
+            if Z > 0:
+                center = [X,Y,Z]            
+                joint = joints(val.name, center)
+                self.joints.append(joint)
 
 
     def color_update_cb(self, color):
