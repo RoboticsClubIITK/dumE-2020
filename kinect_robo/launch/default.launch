@@ -10,9 +10,9 @@
         <!-- <arg name="paused" value="true"/> -->
     </include>
 
-    <!-- <include file="$(find kinect_robo)/launch/rviz_launch.launch">
-        <arg name="robot_name" value="$(arg robot_name)"/>
-    </include> -->
+    <include file="$(find kinect_robo)/launch/rviz_launch.launch">
+        <arg name="robot_name" value="$(arg robot_name_A)"/>
+    </include>
     <!-- <include file="$(find rrbot_gazebo)/launch/rrbot_world.launch"/> -->
 
     <include file="$(find kinect_robo)/launch/spawn_camera.launch">
@@ -26,7 +26,7 @@
         <remap from="/arm_controller/command" to="$(arg robot_name)/arm_controller/command"/>
     </node> -->
 
-    <!-- <node name="joint_tracker" pkg="kinect_robo" type="joint_tracker.py"/> -->
+    <node name="joint_tracker" pkg="kinect_robo" type="joint_tracker3D.py"/>
 
     <include file="$(find kinect_robo)/launch/spawn_arm.launch">
         <arg name="robot_name" value="$(arg robot_name_B)"/>

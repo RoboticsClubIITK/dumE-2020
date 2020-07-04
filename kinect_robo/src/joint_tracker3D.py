@@ -25,9 +25,10 @@ from kinect_robo.msg import ArmPose
 FOCAL_LENGTH = 554.254691
 
 class joints:
-    def __init__(self, name, center):
+    def __init__(self, name, center, area):
         self.name = name
         self.center = center
+        self.area = area
 
 class hsv_:
     def __init__(self, name, h_min, s_min, v_min, h_max, s_max, v_max):
@@ -67,7 +68,7 @@ class arm_track:
         arm_pose = ArmPose()
         print('Centers:')
         for joint in self.joints:
-            print("\t" + joint.name + ':\t[%0.4f, %0.4f, %0.4f]' %(joint.center[0], joint.center[1], joint.center[2]))
+            print("\t" + joint.name + ':\t[%0.4f, %0.4f, %0.4f]\tArea:%0.4f' %(joint.center[0], joint.center[1], joint.center[2], joint.area))
             
             # Add point object to Message
             joint_msg = Point()
@@ -75,6 +76,7 @@ class arm_track:
             
             arm_pose.joint_names.append(joint.name)
             arm_pose.joints.append(joint_msg)
+            arm_pose.areas.append(joint.area)
 
         # Publish Message
         self.joint_pub.publish(arm_pose)
@@ -146,7 +148,7 @@ class arm_track:
             # Add center found to joints container only if countour is detected
             if Z > 0:
                 center = [X,Y,Z]            
-                joint = joints(val.name, center)
+                joint = joints(val.name, center, total_area + 1e-7)
                 self.joints.append(joint)
 
 

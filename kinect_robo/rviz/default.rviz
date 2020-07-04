@@ -49,10 +49,10 @@ Visualization Manager:
       Plane Cell Count: 10
       Reference Frame: <Fixed Frame>
       Value: true
-    - Alpha: 1
+    - Alpha: 0.5
       Class: rviz/RobotModel
       Collision Enabled: false
-      Enabled: false
+      Enabled: true
       Links:
         All Links Enabled: true
         Expand Joint Details: false
@@ -127,18 +127,23 @@ Visualization Manager:
       Update Interval: 0
       Value: true
       Visual Enabled: true
+    # - Alpha: 1
+    #   Class: rviz/Camera
+    #   Image Topic: /kinect/color/image_raw
+    #   Name: Color Camera
+    # - Alpha: 1
+    #   Class: rviz/Camera
+    #   Image Topic: /kinect/depth/image_raw
+    #   Name: Depth Camera
+    # - Alpha: 1
+    #   Class: rviz/PointCloud2
+    #   Topic: /kinect/depth/points
+    #   Name: Point Cloud
+    #   Enabled: true
     - Alpha: 1
-      Class: rviz/Camera
-      Image Topic: /kinect/color/image_raw
-      Name: Color Camera
-    - Alpha: 1
-      Class: rviz/Camera
-      Image Topic: /kinect/depth/image_raw
-      Name: Depth Camera
-    - Alpha: 1
-      Class: rviz/PointCloud2
-      Topic: /kinect/depth/points
-      Name: Point Cloud
+      Class: rviz/Marker
+      Marker Topic: /vx250/joint_state_est
+      Name: Joint Estimate
       Enabled: true
   Enabled: true
   Global Options:

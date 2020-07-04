@@ -4,6 +4,8 @@ import numpy as np
 
 import rospy
 
+import kalman
+
 from kinect_robo.msg import ArmPose
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
@@ -61,7 +63,7 @@ class IK:
     def __init__(self):
         rospy.init_node("IK_node", anonymous=False)
         self.input_sub  = rospy.Subscriber("/vx250/input_arm_pose", ArmPose, self.callback)
-        self.angles_pub = rospy.Publisher("vx250/arm_controller/command", JointTrajectory, queue_size=1)
+        self.angles_pub = rospy.Publisher("/vx250/arm_controller/command", JointTrajectory, queue_size=1)
 
         self.state = ArmState()
         self.prev_state = ArmState()
@@ -116,7 +118,7 @@ class IK:
         G_R = self.state['Red'] - self.state['Green']
         self.a_waist    = np.arctan2(G_R[1], G_R[0] + 1e-7) 
 
-        G_R = self.state['Red'] - self.state['Green'] - Rz(self.a_waist)*np.matrix([[0.04], [0], [0], [1]], dtype=np.float32)        
+        G_R = self.state['Red'] - self.state['Green'] - Rz(self.a_waist)*np.matrix([[0.05], [0], [0], [1]], dtype=np.float32)        
         R_B = self.state['Blue'] - self.state['Red']
         B_Y = self.state['Yellow'] - self.state['Blue']
 
