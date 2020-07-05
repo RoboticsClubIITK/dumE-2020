@@ -187,8 +187,10 @@ class arm_track:
 
 def track():
     at = arm_track()
+    rate = rospy.Rate(120)
     try:
         rospy.spin()
+        rate.sleep()
     except KeyboardInterrupt:
         print("Shutting down")
         cv2.destroyAllWindows()

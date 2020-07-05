@@ -6,11 +6,12 @@ from kalman import Kalman, randn
 import rospy
 
 from kinect_robo.msg import ArmPose
+from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from visualization_msgs.msg import Marker
 from geometry_msgs.msg import Point
 
 CAMERA_ORIGIN = [0, -0.2, 3.14159, 1.25, 0, 0.1]      # [r,p,y,x,y,z] (wrt world Frame) 
-LOOP_RATE = 30
+LOOP_RATE = 120
 
 ## Definitions of Transformation Matrices
 def Rx(theta):
@@ -68,13 +69,14 @@ class IK:
         rospy.init_node("IK_node", anonymous=False)
         self.input_sub  = rospy.Subscriber("/vx250/input_arm_pose", ArmPose, self.callback)
         self.marker_pub = rospy.Publisher("/vx250/joint_state_est", Marker, queue_size=1)
+        self.angles_pub = rospy.Publisher("/vx250/arm_controller/command", JointTrajectory, queue_size=1)
 
         self.measurement = ArmState()
 
-        self.states = {'Green'  : Kalman(np.ones((6,1))/100, np.diag([2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn()]), 1/LOOP_RATE),
-                       'Red'    : Kalman(np.ones((6,1))/100, np.diag([2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn()]), 1/LOOP_RATE),
-                       'Blue'   : Kalman(np.ones((6,1))/100, np.diag([2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn()]), 1/LOOP_RATE),
-                       'Yellow' : Kalman(np.ones((6,1))/100, np.diag([2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn()]), 1/LOOP_RATE)}
+        self.states = {'Green'  : Kalman(np.ones((6,1))/1000, np.diag([2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn()]), 1/LOOP_RATE),
+                       'Red'    : Kalman(np.ones((6,1))/1000, np.diag([2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn()]), 1/LOOP_RATE),
+                       'Blue'   : Kalman(np.ones((6,1))/1000, np.diag([2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn()]), 1/LOOP_RATE),
+                       'Yellow' : Kalman(np.ones((6,1))/1000, np.diag([2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn(), 2.5*randn()]), 1/LOOP_RATE)}
         self.prev_states = self.states
 
         self.rate = rospy.Rate(LOOP_RATE)
@@ -111,6 +113,9 @@ class IK:
 
         self.plotJoints()
 
+        self.findJointAngles()
+        self.publishAngles()
+
         self.measurement.clear()
 
         self.prev_states = temp
@@ -138,6 +143,50 @@ class IK:
 
         self.marker_pub.publish(marker)
         
+    def publishAngles(self):
+        trajectory = JointTrajectory()
+        point = JointTrajectoryPoint()
+        
+        trajectory.header.frame_id = "/base_link"
+
+        trajectory.joint_names.append("waist")
+        trajectory.joint_names.append("shoulder")
+        trajectory.joint_names.append("elbow")
+        trajectory.joint_names.append("wrist_angle")
+        trajectory.joint_names.append("wrist_rotate")
+
+        point.positions.append(self.a_waist)
+        point.positions.append(self.a_shoulder)
+        point.positions.append(self.a_elbow)
+        point.positions.append(self.a_wrist)
+        point.positions.append(0)
+        point.time_from_start = rospy.Duration(0,1e8)
+
+        trajectory.points.append(point)
+
+        trajectory.header.stamp=rospy.Time.now()
+
+        self.angles_pub.publish(trajectory)
+
+    def findJointAngles(self):
+        G_R = self.states['Red'].x[0:3, 0] - self.states['Green'].x[0:3,0]
+        self.a_waist    = np.arctan2(G_R[1], G_R[0] + 1e-7) 
+
+        G_R = self.states['Red'].x[0:3,0] - self.states['Green'].x[0:3,0] - (Rz(self.a_waist)*np.matrix([[0.05], [0], [0], [1]], dtype=np.float32))[0:3]        
+        R_B = self.states['Blue'].x[0:3,0] - self.states['Red'].x[0:3,0]
+        B_Y = self.states['Yellow'].x[0:3,0] - self.states['Blue'].x[0:3,0]
+
+        theta = np.arctan(G_R[2]/(np.linalg.norm(G_R[0:2]) + 1e-7))
+        alpha = np.arctan(R_B[2]/(np.linalg.norm(R_B[0:2]) + 1e-7))
+        beta  = np.arctan2(B_Y[2], np.linalg.norm(B_Y[0:2]) + 1e-7)
+        
+        self.a_shoulder = np.pi/2 - theta
+        self.a_elbow    = -(-np.pi/2 + theta - alpha)
+        self.a_wrist    = -(alpha - beta)
+        
+        print('Angles:' + '\n  Waist:\t' + str(self.a_waist) + '\n  Shoulder:\t' + str(self.a_shoulder) + '\n  Elbow:\t' + str(self.a_elbow) + '\n  Wrist:\t' + str(self.a_wrist))
+        pass
+
 def toWorldFrame(state):
     for key in state.x:
         state.x[key] = T([CAMERA_ORIGIN[3], CAMERA_ORIGIN[4], CAMERA_ORIGIN[5]])*Rz(CAMERA_ORIGIN[2])*Ry(CAMERA_ORIGIN[1])*Rx(CAMERA_ORIGIN[0])*Ry(np.pi/2)*Rz(-np.pi/2)*state.x[key]

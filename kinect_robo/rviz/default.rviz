@@ -49,6 +49,84 @@ Visualization Manager:
       Plane Cell Count: 10
       Reference Frame: <Fixed Frame>
       Value: true
+    - Alpha: 0.3
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        arm1/wx200/base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        arm1/wx200/ee_arm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        arm1/wx200/ee_gripper_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        arm1/wx200/fingers_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        arm1/wx200/forearm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        arm1/wx200/gripper_bar_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        arm1/wx200/gripper_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        arm1/wx200/gripper_prop_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        arm1/wx200/left_finger_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        arm1/wx200/right_finger_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        arm1/wx200/shoulder_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        arm1/wx200/upper_arm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        arm1/wx200/wrist_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Name: Custom Arm (Arm 'A')
+      Robot Description: /custom/robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
     - Alpha: 0.5
       Class: rviz/RobotModel
       Collision Enabled: false
@@ -121,8 +199,8 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-      Name: RobotModel
-      Robot Description: robot_description
+      Name: Standard Arm (Arm 'B')
+      Robot Description: /vx250/robot_description
       TF Prefix: ""
       Update Interval: 0
       Value: true
