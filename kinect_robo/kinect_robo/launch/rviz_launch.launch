@@ -1,0 +1,15 @@
+<launch>
+
+  <arg name="robot_name"                    default=""/>
+  <arg name="use_default_rviz"              default="true"/>
+  <arg name="rvizconfig"                    default="$(find kinect_robo)/rviz/default.rviz" />
+
+
+  <node if="$(arg use_default_rviz)"
+    name="rviz"
+    pkg="rviz"
+    type="rviz"
+    args="-d $(arg rvizconfig)"
+    ns="$(arg robot_name)"/>
+
+</launch>

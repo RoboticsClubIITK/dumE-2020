@@ -1,0 +1,27 @@
+<launch>
+    <node
+        name="waist_1_plot"
+        pkg="rqt_plot"
+        type="rqt_plot"
+        args="/custom/joint_states/position[5] 
+               /vx250/joint_states/position[5]" />
+    <node
+        name="shoulder_1_plot"
+        pkg="rqt_plot"
+        type="rqt_plot"
+        args="/custom/joint_states/position[4] 
+               /vx250/joint_states/position[4]" />
+    <node
+        name="elbow_1_plot"
+        pkg="rqt_plot"
+        type="rqt_plot"
+        args="/custom/joint_states/position[0] 
+               /vx250/joint_states/position[0]" />
+    <node
+        name="wrist_1_plot"
+        pkg="rqt_plot"
+        type="rqt_plot"
+        args="/custom/joint_states/position[6] 
+               /vx250/joint_states/position[6]" />
+
+</launch>
